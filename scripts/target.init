@@ -218,7 +218,7 @@ load_config()
 if [ $(cat /etc/target/scsi_target.lio 2>/dev/null | tr -d " \n\t" | wc -c) = 0 ]; then
     log_warning "Startup config ${STARTUP_CONFIG} is empty, skipping"
 elif [ -e "${STARTUP_CONFIG}" ]; then
-log_action "Loading config from ${STARTUP_CONFIG}, this may take several minutes if you have FC adapters"
+log_action "Loading config from ${STARTUP_CONFIG}, this may take several minutes for FC adapters"
 export __STARTUP_CONFIG="${STARTUP_CONFIG}"
 python 2> /dev/null << EOF
 import os, rtslib
@@ -241,7 +241,7 @@ fi
 
 clear_config()
 {
-log_action "Clearing configuration, this may take several minutes if you have FC adapters"
+log_action "Clearing configuration, this may take several minutes for FC adapters"
 python 2> /dev/null << EOF
 from rtslib import Config
 config = Config()
