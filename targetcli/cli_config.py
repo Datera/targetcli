@@ -530,6 +530,33 @@ class CliConfig(Cli):
             else:
                 log.info("Cancelled: configuration not modified")
 
+    def do_reload(self, options):
+        '''
+        reload
+
+        Reloads the saved system configuration from disk and commits it to the
+        running system.
+        '''
+        if not os.path.isfile(self.config_path):
+            log.info("There is no on-disk system configuration: %s does "
+                     "not exist" % self.config_path)
+        if self.yes_no("Replace the current configuration with the saved "
+                       "system configuration?", False) is not False:
+            log.info("Loading %s..." % self.config_path)
+            self.config.load(self.config_path, allow_new_attrs=True)
+            log.info("Commiting...")
+            for msg in self.config.apply():
+                if 'interactive' in options:
+                    apply = self.yes_no("%s\nPlease confirm" % msg, True)
+                    if apply is False:
+                        log.warning("Aborted commit on user request: "
+                                    "please verify system status")
+                        return
+                else:
+                    log.info(msg)
+        else:
+            log.info("Cancelled: configuration not modified")
+
     def complete_load(self, text, line, begidx, endidx):
         # TODO Add filename support
         return self._complete_options(text, line, begidx, endidx, ['live'])
