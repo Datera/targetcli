@@ -540,6 +540,7 @@ class CliConfig(Cli):
         if not os.path.isfile(self.config_path):
             log.info("There is no on-disk system configuration: %s does "
                      "not exist" % self.config_path)
+            return
         if self.yes_no("Replace the current configuration with the saved "
                        "system configuration?", False) is not False:
             log.info("Loading %s..." % self.config_path)
